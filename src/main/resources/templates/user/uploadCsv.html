@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>CSV 업로드 및 다운로드</title>
@@ -33,7 +33,7 @@
             success: function (data) {
                 if (Array.isArray(data) && data.length) {
                     const csv = convertToCsv(data);
-                    downloadCsv(csv, 'user_formatted.csv');
+                    downloadCsvWithBom(csv, 'user_formatted.csv');
                 } else {
                     alert("CSV 변환 실패: 반환된 데이터가 유효하지 않습니다.");
                 }
@@ -45,19 +45,24 @@
     });
 
     function convertToCsv(data) {
-        if (!data.length) return "";
-
         const headers = Object.keys(data[0]).join(',');
-        const rows = data.map(obj => Object.values(obj).map(val => `"${val}"`).join(','));
-        return [headers, ...rows].join('\n');
+        const rows = data.map(obj =>
+            Object.values(obj).map(val => `"${String(val).replace(/"/g, '""')}"`).join(',')
+        );
+        return [headers, ...rows].join('\r\n');
     }
 
-    function downloadCsv(csvData, fileName) {
-        const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+    function downloadCsvWithBom(csvData, fileName) {
+        const BOM = new Uint8Array([0xEF, 0xBB, 0xBF]);
+        const csvBytes = new TextEncoder().encode(csvData);
+        const blob = new Blob([BOM, csvBytes], { type: 'text/csv' });
+
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = fileName;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     }
 </script>
 </body>
