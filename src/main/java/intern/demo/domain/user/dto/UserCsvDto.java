@@ -115,11 +115,13 @@ public class UserCsvDto {
 
     private List role;
 
+    @Setter
     @CsvBindByName(column = "Creation Date")
-    private String creationDate;
+    private String created_date;
 
+    @Setter
     @CsvBindByName(column = "Modified Date")
-    private String ModifiedDate;
+    private String modified_date;
 
     private String email;
 
