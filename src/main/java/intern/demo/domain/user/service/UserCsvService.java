@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,7 +18,7 @@ public class UserCsvService {
 
     // 업로드된 파일의 데이터 가공
     public List<UserCsvDto> processUserCsv(MultipartFile file) {
-        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             CsvToBean<UserCsvDto> csvToBean = new CsvToBeanBuilder<UserCsvDto>(reader)
                     .withType(UserCsvDto.class)
                     .withIgnoreLeadingWhiteSpace(true)
