@@ -25,7 +25,7 @@ public class UserCsvController {
     }
 
     // 파일 업로드 및 가공
-    @PostMapping("/upload/csv")
+    @PostMapping("/upload")
     public ResponseEntity<List<UserCsvDto>> uploadUserCsv(@RequestParam("file") MultipartFile file) throws IOException {
         List<UserCsvDto> userCsvDtoList = userCsvService.processUserCsv(file);
 
