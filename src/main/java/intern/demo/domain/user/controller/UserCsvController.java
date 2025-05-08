@@ -24,7 +24,12 @@ public class UserCsvController {
         return "/user/uploadCsv";
     }
 
-    // CSV 파일 업로드 및 가공
+    /**
+     * CSV 파일 업로드
+     * @param file
+     * @return JSON 형식의 데이터를 List 타입으로 반환, 200 OK
+     * @throws IOException
+     */
     @PostMapping("/upload/csv")
     public ResponseEntity<List<UserCsvDto>> uploadUserCsv(@RequestParam("file") MultipartFile file) throws IOException {
         List<UserCsvDto> userCsvDtoList = userCsvService.processUserCsv(file);
