@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserCsvService {
 
-    // 업로드된 파일의 데이터 가공
+    // 데이터 처리 및 파싱
     public List<UserCsvDto> processUserCsv(MultipartFile file) {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             CsvToBean<UserCsvDto> csvToBean = new CsvToBeanBuilder<UserCsvDto>(reader)
                     .withType(UserCsvDto.class)
-                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreLeadingWhiteSpace(false)
                     .build();
 
             List<UserCsvDto> userCsvDtoList = csvToBean.parse().stream()
@@ -45,17 +45,17 @@ public class UserCsvService {
         }
     }
 
-    private String formatDate(String inputDate) {
+    private String formatDate(String dt) {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.US);
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            Date date = inputFormat.parse(inputDate);
+            Date date = inputFormat.parse(dt);
             String formattedDate = outputFormat.format(date);
 
             return formattedDate + "+00";
         } catch (ParseException e) {
-            throw new RuntimeException("날짜 변환 실패: " + inputDate, e);
+            throw new RuntimeException("날짜 변환 실패: " + dt, e);
         }
     }
 }
